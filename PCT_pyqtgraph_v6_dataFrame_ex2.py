@@ -1,5 +1,5 @@
 #=============================================
-# File Name: PCT_pyqtgraph_v6_ex2.py
+# File Name: PCT_pyqtgraph_v6_dataFrame_ex2.py
 #
 # Requirement:
 # Hardware: BM201-ISK or BM501-AOP
