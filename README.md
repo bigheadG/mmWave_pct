@@ -6,20 +6,20 @@
 ![Language](https://img.shields.io/badge/python-%3E3.6%20-green.svg)&nbsp;
 ![License](http://img.shields.io/badge/license-MIT-green.svg?style=flat)
 
-# mmWave-POS (People-Counting Overhead Sensor SDK)
+# mmWave-PCT (People-Counting Wall Mount with Tilt Sensor SDK)
 
 Current PI's OS is supports python 3.7.0
 
 https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up/3
 
-This repository contains the Batman mmWave-POS People-Counting Overhead Sensor SDK. The sample code below consists of instruction for using the mmWave lib. This mmWave-POS Python Program will work with People-Counting Overhead Sensor based Batman BM501-POS mmWave Kit solution. This Python Program works with a Raspberry Pi 4, NVIDIA Jetson Nano, Windows, Linux, or MAC computer with Batman BM501-POS Kit attached via Kit’s HAT Board; and that the BM501 Kit is an easy-to-use mmWave sensor evaluation kit for People Sensing, People Counting, or People Occupancy Density Estimation in approx. 6m x 6m x 3m region without privacy invasion; and where the Python Program would have multiple people detection in a 3-Dimentional Area with ID tag, posX, posY, posZ, velX, velY, velZ, accX, accY, accZ parameters, along with Point Clouds with elevation, azimuth, doppler, range, and snr parameters. 
+This repository contains the Batman mmWave-POS People-Counting Overhead Sensor SDK. The sample code below consists of instruction for using the mmWave lib. This mmWave-PCT Python Program will work with People-Counting Overhead Sensor based Batman BM501-POS mmWave Kit solution. This Python Program works with a Raspberry Pi 4, NVIDIA Jetson Nano, Windows, Linux, or MAC computer with Batman BM501-PCT Kit attached via Kit’s HAT Board; and that the BM501 Kit is an easy-to-use mmWave sensor evaluation kit for People Sensing, People Counting, or People Occupancy Density Estimation in approx. 6m x 6m x 3m region without privacy invasion; and where the Python Program would have multiple people detection in a 3-Dimentional Area with ID tag, posX, posY, posZ, velX, velY, velZ, accX, accY, accZ parameters, along with Point Clouds with elevation, azimuth, doppler, range, and snr parameters. 
 
 # BM501-POS EVM Kit Mounting and Scene Conditions
 The BM501 Module from the EVM Kit needs to be mounted at a heigh of 2.8-3.0m top-down in the center of the area of interest, with the BM501 Module sensor directly facing the ground. Notes: If you use Tripod to elevate the EVM, Please make sure that it has an extension arm (minimun 305mm ~ 381mm or 12-15 inches) to set apart the EVM away from the Tripod's stem.
     
 
 # Hardware:
-    Batman BM501-POS EVM Kit (TI IWR6843AOP ASIC based mmWave solution)
+    Batman BM501-PCT EVM Kit (TI IWR6843AOP ASIC based mmWave solution)
  
  ![BM501 EVM Kit Structure](https://user-images.githubusercontent.com/2010446/118910376-ed084400-b956-11eb-8d10-defee8be9c49.png)
 
@@ -41,7 +41,7 @@ Library update:
 
 Examples:
 
-        ***Notes: Play back example work with PC3 tool kit ***
+        ***Notes: Play back example work with PCT tool kit ***
         POS_pc3OVH_ex0.py                           
         POS_pc3OVH_raw_ex0_record.py                # record v6,v7 and v8 data
         POS_pc3OVH_pyqtgraph_raw_v6_ex1.py          # plot v6 point cloud
