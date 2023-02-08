@@ -11,7 +11,6 @@ JB_RADAR_INSTALL_HEIGHT = 2.41 # meter
 #
 # Requirement:
 # Hardware: BM201-ISK or BM501-AOP
-# Firmware: PC3-I471
 #
 # lib: pct
 #
@@ -31,7 +30,7 @@ import pyqtgraph.opengl as gl
 import pyqtgraph as pg
 import numpy as np
 
-import pct
+from mmWave import pct
 import serial
 from threading import Thread
 from datetime import date,datetime 
@@ -273,7 +272,7 @@ def showData(dck,v6i,v7i,v8i):
 			print("\n--------v7-----------fn:{:} len({:})".format(fn,v7len))
 			print(v7i)
 		if v8len > 2:
-			print("\n--------v8-----------fn:{:} len({:})".format(fn,v8len-2))
+			print("\n--------v8-----------fn:{:} len({:})".format(fn,v8len))
 			print(v8i)
 
 
@@ -296,15 +295,15 @@ def radarExec():
 	 
 	hdr = radar.getHeader()
 	fn = hdr.frameNumber
+	showData(dck,v6,v7,v8)
 	
 	if  fn != prev_fn:
 		prev_fn = fn
 		v6len = len(v6)
-		print('frameNumber: {:} v6 fetch time:{:.3f} ms  v6-points:{:}'.format(fn,radar.v6_fetch_time,v6len)) 
+		print('fn: {:} v6  v6-points:{:}'.format(fn,v6len)) 
 		v6pcA[:-1] = v6pcA[1:]
 		v6pcA[-1] = len(v6)
 		
-		 
 		#v6 [(sx,sy,sz,ran,elv,azi,dop,snr,fn)...]
 		QUE_INSERT(v6 if len(v6) > 0 else [])
 		
@@ -315,6 +314,7 @@ def radarExec():
 				dBuf.append(i)
 		
 		sensorA = np.array(dBuf,dtype=object)
+		
 		 
 			
 	port.flushInput() 
