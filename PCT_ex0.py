@@ -4,7 +4,7 @@
 # Requirement:
 # Hardware: AOP
 # Firmware: 
-# lib: pct : wall mount People Counting with Tilt
+# lib: pct : People Counting with Tilt
 # show V6,V7,V8
 # type: raw
 # Application: output RAW data
@@ -15,8 +15,8 @@ import struct
 import datetime
 
 import numpy as np
-#from mmWave import pc3OVH
-import pct
+from mmWave import pct
+
 
 
 #pi 3 or pi 4
@@ -55,7 +55,7 @@ def uartGetTLVdata(name):
 		if dck and fn != prev_fn:
 			prev_fn = fn
 			print(f"\n\n\n====================== {fn} ===============================")
-			print(f"fn = {fn} [v6:{len(v6)} :v7:{len(v7)}:v8:{len(v8)}]")
+			print(f"fn={fn} lenth of:[v6:{len(v6)} :v7:{len(v7)}:v8:{len(v8)}]")
 			
 			if len(v6) != 0:
 				
