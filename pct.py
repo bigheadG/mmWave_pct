@@ -28,7 +28,7 @@
 import serial
 import time
 import struct
-import pandas as pd
+#import pandas as pd
 import numpy as np
 
 class header:
@@ -61,7 +61,7 @@ class Pct:
 	start_time = 0
 	v6_fetch_time = 0
 	frameNumber = 0
-	
+	df = ""
 	# provide csv file dataframe
 	# real-time 
 	v6_col_names_rt = ['fN','type','sx', 'sy', 'sz','range','elv','azimuth','doppler','snr'] 
@@ -85,10 +85,14 @@ class Pct:
 	sm  = False #Observed StateMachine: True Show message
 	plen = 16 
 	
-	def __init__(self,port, tiltAngle = None, height = None):
+	def __init__(self,port, tiltAngle = None, height = None ,df = None):
 		self.port = port
 		self.height = 0.0 if height == None else height
 		self.elv_tilt = 0.0 if tiltAngle == None else tiltAngle * np.pi/180.0 
+		
+		if df == "DataFrame":
+			self.df = df
+			
 		
 		print("(jb)(PCT)Wall Mount People Counting 3D with Tilt initial")
 		print("(jb)version:v1.0.2")
@@ -99,6 +103,8 @@ class Pct:
 		print(f"(jb)Radar tilt degree:{tiltAngle}° install height:{height}")
 		print("(jb)Output: V6,V7,V8 data:(RAW)")
 		print("(jb)v6:[(sx,sy,sz,ran,elv,azi,dop,snr,fn)....]")
+		print("(jb)v7:[(tid,posX,posY,posZ,velX,velY,velZ,accX,accY,accZ,ec0..ec15,g,confi)..]")
+		 
 		
 	def useDebug(self,ft):
 		self.dbg = ft
@@ -172,9 +178,16 @@ class Pct:
 		return unitByte,stateString, sbyte, dataByte,retCnt, int(nPoint)
 		
 	def list2df(self,dck,l6,l7,l8):
-		ll6 = pd.DataFrame(l6,columns=self.v6_col_names_rt)
-		ll7 = pd.DataFrame(l7,columns=self.v7_col_names_rt)
-		ll8 = l8 #pd.DataFrame(l8,columns=self.v8_col_names_rt)
+		if self.df == "DataFrame":
+			try:
+				import pandas as pd
+			except ImportError:
+				pass
+						
+			
+			ll6 = pd.DataFrame(l6,columns=self.v6_col_names_rt)
+			ll7 = pd.DataFrame(l7,columns=self.v7_col_names_rt)
+			ll8 = l8 #pd.DataFrame(l8,columns=self.v8_col_names_rt)
 		return (dck,ll6,ll7,ll8)
 
 #
@@ -193,8 +206,8 @@ class Pct:
 #  
 # 
 #
-	def tlvRead(self,disp,df = None):
-		
+	def tlvRead(self,disp):
+		df = self.df
 		#print("---tlvRead---")
 		#ds = dos
 		typeList = [6,7,8]
@@ -218,8 +231,6 @@ class Pct:
 			try:
 				ch = self.port.read()
 			except:
-				#return (False,v6,v7,v8)
-				#return (False,v6,v7,v8) if (df == None) else self.list2df(False,v6,v7,v8)
 				return self.list2df(False,v6df,v7df,v8df) if (df == 'DataFrame') else (False,v6,v7,v8)
 				
 			#print(str(ch))
@@ -239,8 +250,6 @@ class Pct:
 					#print("not: magicWord state:")
 					idx = 0
 					rangeProfile = b""
-					#return (False,v6,v7,v8)
-					#return (False,v6,v7,v8) if (df == None) else self.list2df(False,v6df,v7df,v8df)
 					return self.list2df(False,v6df,v7df,v8df) if (df == 'DataFrame') else (False,v6,v7,v8)
 		
 			elif lstate == 'header':
@@ -260,8 +269,6 @@ class Pct:
 					except:
 						if self.dbg == True:
 							print("(Header)Improper TLV structure found: ")
-						#return (False,v6,v7,v8)
-						#return (False,v6,v7,v8) if (df == None) else self.list2df(False,v6df,v7df,v8df)
 						return self.list2df(False,v6df,v7df,v8df) if (df == 'DataFrame') else (False,v6,v7,v8)
 					
 					if disp == True:  
@@ -270,8 +277,6 @@ class Pct:
 					tlvCount = self.hdr.numTLVs
 					#print("tlvCount:{:}".format(tlvCount))
 					if self.hdr.numTLVs == 0:
-						#return (True,v6,v7,v8)
-						#return (True,v6,v7,v8) if (df == None) else self.list2df(True,v6df,v7df,v8df)
 						return self.list2df(True,v6df,v7df,v8df) if (df == 'DataFrame') else (True,v6,v7,v8)
 						
 					if self.sm == True:
@@ -284,8 +289,7 @@ class Pct:
 				elif idx > 44:
 					idx = 0
 					lstate = 'idle'
-					#return (False,v6,v7,v8)
-					#return (False,v6,v7,v8) if (df == None) else self.list2df(False,v6df,v7df,v8df)
+
 					return self.list2df(False,v6df,v7df,v8df) if (df == 'DataFrame') else (False,v6,v7,v8)
 					
 			elif lstate == 'TL': #TLV Header type/length
@@ -311,8 +315,7 @@ class Pct:
 						if self.dbg == True:
 							print("TL unpack Improper Data Found:")
 						self.port.flushInput()
-						#return (False,v6,v7,v8)
-						#return (False,v6,v7,v8) if (df == None) else self.list2df(False,v6df,v7df,v8df)
+
 						return self.list2df(False,v6df,v7df,v8df) if (df == 'DataFrame') else (False,v6,v7,v8)
 					
 					unitByteCount,lstate ,plen ,dataBytes,lenCount, numOfPoints = self.tlvTypeInfo(ttype,self.tlvLength,disp)
@@ -340,8 +343,7 @@ class Pct:
 					except:
 						if self.dbg == True:
 							print("(6.0)Improper Type 6 unit Value structure found: ")
-						#return (False,v6,v7,v8)
-						#return (False,v6,v7,v8) if (df == None) else self.list2df(False,v6df,v7df,v8df)
+
 						return self.list2df(False,v6df,v7df,v8df) if (df == 'DataFrame') else (False,v6,v7,v8)
 					
 					if self.sm == True:
@@ -391,8 +393,6 @@ class Pct:
 					except:
 						if self.dbg == True:
 							print("(6.1)Improper Type 6 Value structure found: ")
-						#return (False,v6,v7,v8)
-						#return (False,v6,v7,v8) if (df == None) else self.list2df(False,v6df,v7df,v8df)
 						return self.list2df(False,v6df,v7df,v8df) if (df == 'DataFrame') else (False,v6,v7,v8)
 					
 				if idx == lenCount:
@@ -404,8 +404,6 @@ class Pct:
 						lstate = 'idle'
 						if self.sm == True:
 							print("(V6:{:d})=>(idle) :true".format(tlvCount))
-						#return (True,v6,v7,v8)
-						#return (True,v6,v7,v8) if (df == None) else self.list2df(True,v6df,v7df,v8df)
 						self.v6_fetch_time  = (time.time() - self.start_time) * 1000 
 						return self.list2df(True,v6df,v7df,v8df) if (df == 'DataFrame') else (True,v6,v7,v8)
 						
@@ -418,8 +416,6 @@ class Pct:
 					idx = 0
 					sbuf = b""
 					lstate = 'idle'
-					#return (False,v6,v7,v8)
-					#return (False,v6,v7,v8) if (df == None) else self.list2df(False,v6,v7,v8)
 					return self.list2df(False,v6df,v7df,v8df) if (df == 'DataFrame') else (False,v6,v7,v8)
 				
 			elif lstate == 'V7':
@@ -446,8 +442,6 @@ class Pct:
 					except:
 						if self.dbg == True:
 							print("(7)Improper Type 7 Value structure found: ")
-						#return (False,v6,v7,v8)
-						#return (False,v6,v7,v8) if (df == None) else self.list2df(False,v6df,v7df,v8df)
 						return self.list2df(False,v6df,v7df,v8df) if (df == 'DataFrame') else (False,v6,v7,v8)
 						
 				if idx >= lenCount:
@@ -459,8 +453,6 @@ class Pct:
 						lstate = 'idle'
 						if self.sm == True:
 							print("(V7)=>(idle) :true")
-						#return (True,v6,v7,v8)
-						#return (True,v6,v7,v8) if (df == None) else self.list2df(True,v6df,v7df,v8df)
 						return self.list2df(True,v6df,v7df,v8df) if (df == 'DataFrame') else (True,v6,v7,v8)
 						
 					else: # Go to TL to get others type value
@@ -473,8 +465,6 @@ class Pct:
 					idx = 0 
 					lstate = 'idle'
 					sbuf = b""
-					#return (False,v6,v7,v8)
-					#return (False,v6,v7,v8) if (df == None) else self.list2df(False,v6df,v7df,v8df)
 					return self.list2df(False,v6df,v7df,v8df) if (df == 'DataFrame') else (False,v6,v7,v8)
 				
 			elif lstate == 'V8':
@@ -494,15 +484,12 @@ class Pct:
 						v8df = [self.hdr.frameNumber,'v8']
 						v8df.extend(v8)
 						
-					#return (True,v6,v7,v8) if (df == None) else self.list2df(True,v6df,v7df,v8df)
 					return self.list2df(True,v6df,v7df,v8df) if (df == 'DataFrame') else (True,v6,v7,v8)
 				
 				if idx > lenCount:
 					sbuf = b""
 					idx = 0
 					lstate = 'idle'
-					#return (False,v6,v7,v8)
-					#return (False,v6,v7,v8) if (df == None) else self.list2df(False,v6df,v7df,v8df)
 					return self.list2df(False,v6df,v7df,v8df) if (df == 'DataFrame') else (False,v6,v7,v8)
 					
 	def v67Simlog(frameNum):
