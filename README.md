@@ -12,7 +12,7 @@ Current PI's OS is supports python 3.7.0
 
 https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up/3
 
-This repository contains the Batman mmWave-POS People-Counting Overhead Sensor SDK. The sample code below consists of instruction for using the mmWave lib. This mmWave-PCT Python Program will work with People-Counting Overhead Sensor based Batman BM501-POS mmWave Kit solution. This Python Program works with a Raspberry Pi 4, NVIDIA Jetson Nano, Windows, Linux, or MAC computer with Batman BM501-PCT Kit attached via Kit’s HAT Board; and that the BM501 Kit is an easy-to-use mmWave sensor evaluation kit for People Sensing, People Counting, or People Occupancy Density Estimation in approx. 6m x 6m x 3m region without privacy invasion; and where the Python Program would have multiple people detection in a 3-Dimentional Area with ID tag, posX, posY, posZ, velX, velY, velZ, accX, accY, accZ parameters, along with Point Clouds with elevation, azimuth, doppler, range, and snr parameters. 
+This repository contains the Batman mmWave-PCT People-Counting with Tilt Sensor SDK. The sample code below consists of instruction for using the mmWave lib. This mmWave-PCT Python Program will work with People-Counting Overhead Sensor based Batman BM501-POS mmWave Kit solution. This Python Program works with a Raspberry Pi 4, NVIDIA Jetson Nano, Windows, Linux, or MAC computer with Batman BM501-PCT Kit attached via Kit’s HAT Board; and that the BM501 Kit is an easy-to-use mmWave sensor evaluation kit for People Sensing, People Counting, or People Occupancy Density Estimation in approx. 6m x 6m x 3m region without privacy invasion; and where the Python Program would have multiple people detection in a 3-Dimentional Area with ID tag, posX, posY, posZ, velX, velY, velZ, accX, accY, accZ parameters, along with Point Clouds with elevation, azimuth, doppler, range, and snr parameters. 
 
 # BM501-PCT EVM Kit Mounting and Scene Conditions
 The BM501 Module from the EVM Kit needs to be mounted at a heigh of 2.8-3.0m top-down in the center of the area of interest, with the BM501 Module sensor directly facing the ground. Notes: If you use Tripod to elevate the EVM, Please make sure that it has an extension arm (minimun 305mm ~ 381mm or 12-15 inches) to set apart the EVM away from the Tripod's stem.
@@ -42,8 +42,11 @@ Library update:
 Examples:
 
         ***Notes: Play back example work with PCT tool kit ***
-        POS_pc3OVH_ex0.py                           
-        POS_pc3OVH_raw_ex0_record.py                # record v6,v7 and v8 data
+        PCT_ex0.py
+        PCT_pyqtgraph_3d_ex1.py                     # plot v6 in 2d/3d
+        PCT_pyqtgraph_v6_dataFrame_ex2.py           # plot v6 point cloud
+        
+        
         POS_pc3OVH_pyqtgraph_raw_v6_ex1.py          # plot v6 point cloud
         POS_pc3OVH_pyqtgraph_v7_gate.py             # Gate Application *
         pc3az2021-09-10-12-03-36.csv                # recorded data for playback
@@ -78,7 +81,7 @@ If Run demo program can not find any Raw data output:
  
  # import lib
 
-    from mmWave import pc3OVH
+    from mmWave import pct
 
   ### raspberry pi 4 use ttyS0
     port = serial.Serial("/dev/ttyS0",baudrate = 921600, timeout = 0.5)
@@ -97,14 +100,19 @@ If Run demo program can not find any Raw data output:
 
 ## define
 
-    radar = pc3OVH.Pc3OVH(port)
+    radar = pct.Pct(port)
     
-    radar = pc3OVH.Pc3OVH(port, tiltAngle= 30.0, height = 2.0)
-    #tileAngle: 30.0° , height: 2 meter
-    
-    
-    read v6 fetch time:
-    print("v6 fetch_time: {:.1f} ms".format(radar.v6_fetch_time))
+    radar = pct.Pct(port, tiltAngle= 30.0, height = 2.0)
+    Pct argument: 
+        port: UART port
+        tileAngle: mmWave board install angle,  ex: tileAngle is 30.0° , height: 2 meter
+        height:    mmWave Board install heigh, unit: meter
+        df:        tlvRead output data type. df = "DataFrame" v6,v7 output DataFrame types data.
+    ex:   
+        port = serial.Serial(PORT,baudrate = BAUD_RATE , timeout = 0.5) 
+        radar = pct.Pct(port,tiltAngle=JB_TILT_DEGREE,height = JB_RADAR_INSTALL_HEIGHT, df = "DataFrame")
+        
+     
 
 ## Header:
 
@@ -120,20 +128,24 @@ If Run demo program can not find any Raw data output:
         uartSendTime = 0
         numTLVs = 0
         checksum = 0
-
+       
 # Data Structure(Raw Data):
 V6: Point Cloud<br/>
 Each Point Cloud list consists of an array of points,Each point data structure is defined as following
    
-    point Struct:
-        elevation: float  #Elevation in radians
-        azimuth:  float   #Azimuth in radians 
-        range:    float   #Range in meters
-        doppler:  float   #Doppler in m/s
-        snr:      float   #SNR, ratio
+    point Struct(xyzreadsf type):
         sx :      float   #point position x
         sy :      float   #point position y
         sz :      float   #point position z
+        range:    float   #Range in meters
+        elevation: float  #Elevation in radians
+        azimuth:  float   #Azimuth in radians
+        doppler:  float   #Doppler in m/s
+        snr:      float   #SNR, ratio
+        fn:       Int     #frame number
+     
+  <img width="1112" alt="listData" src="https://user-images.githubusercontent.com/2010446/217445473-304a2a94-a126-45c5-b88e-70be01b64401.png">
+
         
 V7: Target Object<br/>
 Each Target List consists of an array of targets. Each target data structure defind as following:
