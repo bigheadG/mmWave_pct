@@ -251,7 +251,7 @@ Each Target List consists of an array of target IDs, A targetID at index i is th
     
     (1)Read record file
     readFile(fileName)
-    (v6smu,v7smu,v8smu) = radar.readFile("pc3Aop2021-xx-xx-xx-xx-34.csv")
+    (v6smu,v7smu,v8smu) = radar.readFile("pct_2021-xx-xx-xx-xx-34.csv")
    
     (2)based on frameNumber output v6,v7 and v8 data
     getRecordData(frameNumber)
@@ -261,25 +261,26 @@ Each Target List consists of an array of target IDs, A targetID at index i is th
     v7: target object of dataframe type data  
     v8: target id of dataframe type data
     
-## POS_pc3OVH_pyqtgraph_v7_gate.py example
+## PCT_ex3_pyqtgraph_v6_dataFrame.py example
 
-        ################### Real Time/Playback & parameter setting   ######
-        REAL_TIME = True
+        ################### Run Time/Playback & parameter setting   ######
+        #RUN_TIME = False #playback
+        RUN_TIME = True   #run time
 
-        PORT = "/dev/tty.usbmodem144103"  #UART port depends on your computer 
+        # Parameters:
+        PORT = '/dev/tty.SLAB_USBtoUART5'
+        #PORT = '/dev/tty.usbmodem14303'
 
-        #v6run = True  #v6 plot Enable
-        v6run = False  #v6 plot disable
+        JB_TILT_DEGREE = 45 
+        JB_RADAR_INSTALL_HEIGHT = 2.41 # meter
 
-        JB_RADAR_INSTALL_HEIGHT = 2.46 #
         QUEUE_LEN = 3
 
-        BAUD_RATE = 921600 if REAL_TIME == True else 115200
-        #rtSwitch = True   # real time mode
-        #         = False  # play back mode
-        rtSwitch  = True if REAL_TIME == True else False
-        REC_FILE  = "pc3az2021-09-10-12-03-36.csv"
+        BAUD_RATE = 921600 if RUN_TIME == True else 115200
+        PLAYBACK_FILE  = "pct_2023-02-08-16-48-32.csv" # find file in same directory
+
         ####################################################################
+
 
 
 ## Example & demo:
