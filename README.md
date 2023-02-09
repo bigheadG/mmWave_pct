@@ -205,14 +205,15 @@ List types:
         ['fN','type','sx', 'sy', 'sz','range','elv','azimuth','doppler','snr']
         fN: frame number
         type: 'v6'
-        elv: float  #Elevation in radians
-        azimuth:  float   #Azimuth in radians
-        range:    float   #Range in meters
-        doppler:  float   #Doppler in m/s
-        snr: #SNR, ratio
         sx : point position x
         sy : point position y
         sz : point position z
+        range:    float   #Range in meters
+        elv: float  #Elevation in radians
+        azimuth:  float   #Azimuth in radians
+        doppler:  float   #Doppler in m/s
+        snr: #SNR, ratio
+        
   
   
     Type v7:
