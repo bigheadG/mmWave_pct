@@ -49,12 +49,7 @@ Examples:
 
 other example please reference: https://github.com/bigheadG/mmWave/tree/master/POS
     
-    
-        POS_pc3OVH_pyqtgraph_v7_gate.py demo
-
-https://user-images.githubusercontent.com/2010446/133815855-0fcab33e-04c6-4c82-8548-cb4c44950821.mov
-
-    
+ 
      
 If Run demo program can not find any Raw data output:
       Please set UART to R/W mode: 
@@ -193,6 +188,8 @@ Each Target List consists of an array of target IDs, A targetID at index i is th
 # Data Structure(DataFrame Type):
     When tlvRead argument set df = 'DataFrame', v6,v7 and v8 will output DataFrame style data
     
+    JB_TILT_DEGREE = 45 
+    JB_RADAR_INSTALL_HEIGHT = 2.41 #unit: meter
     radar = pct.Pct(port,tiltAngle=JB_TILT_DEGREE,height = JB_RADAR_INSTALL_HEIGHT, df = "DataFrame")
     (dck,v6,v7,v8) = radar.tlvRead(False)
     
@@ -283,11 +280,9 @@ Each Target List consists of an array of target IDs, A targetID at index i is th
 
 
 
-## Example & demo:
+https://user-images.githubusercontent.com/2010446/217719084-ee076820-0923-4d88-8284-b1d3906d6070.MOV
 
-    POS_pc3OVH_pyqtgraph_3d_xyz_df_queue_v6_que_cluster_class_projectXY_doppler_y1.py
 
-https://user-images.githubusercontent.com/2010446/137857228-8c7ebf55-d827-4d17-888c-1c6fe446efce.mov
 
 
 ## Reference
