@@ -295,7 +295,7 @@ https://user-images.githubusercontent.com/2010446/217719084-ee076820-0923-4d88-8
 
 # AOP Coordinate Geometry
 
-![aop_objGeoSmall](https://user-images.githubusercontent.com/2010446/217742360-e87be649-4856-415a-a425-d95ef845a9a5.png)
+![aop_objGeoSmall](https://user-images.githubusercontent.com/2010446/217845801-6e05d7b9-34cc-44b4-88e9-74482df43fc8.png)
 
 
 ## Reference
