@@ -41,19 +41,11 @@ Library update:
 
 Examples:
 
-        ***Notes: Play back example work with PCT tool kit ***
         PCT_ex0.py                              # show v6,v7 and v8 data
         PCT_ex1_pyqtgraph_3d.py                 # plot v6 in 2d/3d
-        PCT_ex2_record.py                       # record v6,v7,v8 data
-        PCT_ex3_pyqtgraph_v6_dataFrame.py       # plot v6 point cloud
+        PCT_ex2_record.py                       # record v6,v7 and v8 data. file output: pct_2023-xx-xx-xx-xx.csv
+        PCT_ex3_pyqtgraph_v6_dataFrame.py       # runtime/playback plot v6 point cloud, playback mode work with TK-101
         
-        
-        POS_pc3OVH_pyqtgraph_raw_v6_ex1.py          # plot v6 point cloud
-        POS_pc3OVH_pyqtgraph_v7_gate.py             # Gate Application *
-        pc3az2021-09-10-12-03-36.csv                # recorded data for playback
-        
-        #use pointCloud + doppler fusion
-        POS_pc3OVH_pyqtgraph_3d_xyz_df_queue_v6_que_cluster_class_projectXY_doppler_y1_b2_elink.py
 
 other example please reference: https://github.com/bigheadG/mmWave/tree/master/POS
     
