@@ -42,9 +42,10 @@ Library update:
 Examples:
 
         ***Notes: Play back example work with PCT tool kit ***
-        PCT_ex0.py
-        PCT_pyqtgraph_3d_ex1.py                     # plot v6 in 2d/3d
-        PCT_pyqtgraph_v6_dataFrame_ex2.py           # plot v6 point cloud
+        PCT_ex0.py                              # show v6,v7 and v8 data
+        PCT_ex1_pyqtgraph_3d.py                 # plot v6 in 2d/3d
+        PCT_ex2_record.py                       # record v6,v7,v8 data
+        PCT_ex3_pyqtgraph_v6_dataFrame.py       # plot v6 point cloud
         
         
         POS_pc3OVH_pyqtgraph_raw_v6_ex1.py          # plot v6 point cloud
