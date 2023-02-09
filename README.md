@@ -70,7 +70,10 @@ If Run demo program can not find any Raw data output:
  # import lib
 
     from mmWave import pct
-
+  ### UART Baud Rate:
+    RUN time(AOP): 921600 bps
+    Playback(TK-101): 115200 bps
+    
   ### raspberry pi 4 use ttyS0
     port = serial.Serial("/dev/ttyS0",baudrate = 921600, timeout = 0.5)
  
@@ -90,15 +93,16 @@ If Run demo program can not find any Raw data output:
 
     radar = pct.Pct(port)
     
-    radar = pct.Pct(port, tiltAngle= 30.0, height = 2.0)
+    radar = pct.Pct(port, tiltAngle= 45.0, height = 2.0)
     Pct argument: 
         port: UART port
-        tileAngle: mmWave board install angle,  ex: tileAngle is 30.0° , height: 2 meter
+        tileAngle: mmWave board install angle,  ex: tileAngle is 45.0° , height: 2 meter
         height:    mmWave Board install heigh, unit: meter
         df:        tlvRead output data type. df = "DataFrame" v6,v7 output DataFrame types data.
     ex:   
         port = serial.Serial(PORT,baudrate = BAUD_RATE , timeout = 0.5) 
-        radar = pct.Pct(port,tiltAngle=JB_TILT_DEGREE,height = JB_RADAR_INSTALL_HEIGHT, df = "DataFrame")
+        # df = "DataFrame" tlvRead will output DataFrame types data
+        radar = pct.Pct(port,tiltAngle=JB_TILT_DEGREE,height = JB_RADAR_INSTALL_HEIGHT, df = "DataFrame") 
         
      
 
