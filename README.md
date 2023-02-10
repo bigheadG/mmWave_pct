@@ -45,7 +45,7 @@ Examples:
         PCT_ex1_pyqtgraph_3d.py                 # plot v6 in 2d/3d
         PCT_ex2_record.py                       # record v6,v7 and v8 data. file output: pct_2023-xx-xx-xx-xx.csv
         PCT_ex3_pyqtgraph_v6_dataFrame.py       # runtime/playback plot v6 point cloud, playback mode work with TK-101
-        
+        PCT_ex4_pyqtgraph_v6_3d_uDoppler_Freq.py #see mov
 
 other example please reference: https://github.com/bigheadG/mmWave/tree/master/POS
     
