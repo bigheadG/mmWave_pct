@@ -26,9 +26,10 @@ from threading import Thread
 
 
 from datetime import date,datetime,time
-import pandas as pd
 from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import StandardScaler
+import pandas as pd
+pd.options.display.float_format = '{:.2f}'.format
 
 ################### Run Time/Playback & parameter setting   ######
 #RUN_TIME = False #playback
@@ -36,11 +37,11 @@ RUN_TIME = True   #run time
 
 ###################################################################################
 # Parameters:
-PORT = '/dev/tty.SLAB_USBtoUART5'
+PORT = 'COM52'
 #PORT = '/dev/tty.usbmodem14303'
 
 JB_TILT_DEGREE = 45 
-JB_RADAR_INSTALL_HEIGHT = 2.41 # meter
+JB_RADAR_INSTALL_HEIGHT = 2.39 # meter
 
 QUEUE_LEN = 3
 
@@ -228,15 +229,21 @@ def showData(dck,v6i,v7i,v8i):
 		v8len = len(v8i)
 		print("Sensor Data: [v6,v7,v8]:[{:d},{:d},{:d}]".format(v6len,v7len,v8len))
 		if v6len > 0:
+			v6i = v6i.sort_values(by='snr', ascending=False)
 			print("\n--------v6-----------fn:{:} len({:})".format(fn,v6len))
+			v6i = v6i[:10]
 			print(v6i)
-		if v7len > 0:
-			print("\n--------v7-----------fn:{:} len({:})".format(fn,v7len))
-			print(v7i)
-		if v8len > 2:
-			lv8 = v8len-2 if v8len > 2 else 0
-			print("\n--------v8-----------fn:{:} len({:})".format(fn,lv8))
-			print(v8i)
+			print(v6i.mean())
+			
+			
+		if 1:
+			if v7len > 0:
+				print("\n--------v7-----------fn:{:} len({:})".format(fn,v7len))
+				print(v7i)
+			if v8len > 2:
+				lv8 = v8len-2 if v8len > 2 else 0
+				print("\n--------v8-----------fn:{:} len({:})".format(fn,lv8))
+				print(v8i)
 
 #objBuf = [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]
 locBuf = []
@@ -263,19 +270,26 @@ def radarExec():
 	#showData(dck,v6,v7,v8)
 	 
 	if  fn != prev_fn:
+		
 		prev_fn = fn
+		
+		
 		print(f"---------------fn:{fn}  prev_fn: {prev_fn}---------")
+		
+		
 		v8len = len(v8)
 		v8len = v8len-2 if v8len > 2 else 0
 		v6len = len(v6)
 		v7len = len(v7)
 		print("Sensor Data: [v6,v7,v8]:[{:d},{:d},{:d}]".format(v6len,v7len,v8len))
+		showData(dck,v6,v7,v8)
+		
 		
 		if v6len != 0: #and flag == True:
 			flag = False
 			posTemp = v6
 			v6Temp = v6
-			print(v6)
+			#print(v6)
 			v6op = v6    #v6Temp[(v6Temp.sx > -0.5) & (v6Temp.sx < 0.5) & (v6Temp.sy < 1.0) & (v6Temp.doppler != 0) ]
 			d = v6op.loc[:,['sx','sy','sz']] 
 			dd = v6op.loc[:,['sx','sy','sz','doppler']] 
