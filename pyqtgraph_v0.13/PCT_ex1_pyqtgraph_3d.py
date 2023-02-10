@@ -80,8 +80,10 @@ app = mkQApp("PCT")
 win3D = gl.GLViewWidget()
 win3D.setWindowTitle('(w) V6:sp0 3D Chart')
 #size=50:50:50
+
 g = gl.GLGridItem()
 g.setSize(x=50,y=50,z=50)
+
 #g.setSpacing(x=1, y=1, z=1, spacing=None)
 
 # create box to represent device  
