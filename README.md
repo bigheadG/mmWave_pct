@@ -12,7 +12,7 @@ Current PI's OS is supports python 3.7.0
 
 https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up/3
 
-This repository contains the Batman mmWave-PCT People-Counting with Tilt Sensor SDK. The sample code below consists of instruction for using the mmWave lib. This mmWave-PCT Python Program will work with People-Counting Overhead Sensor based Batman BM501-POS mmWave Kit solution. This Python Program works with a Raspberry Pi 4, NVIDIA Jetson Nano, Windows, Linux, or MAC computer with Batman BM501-PCT Kit attached via Kit’s HAT Board; and that the BM501 Kit is an easy-to-use mmWave sensor evaluation kit for People Sensing, People Counting, or People Occupancy Density Estimation in approx. 6m x 6m x 3m region without privacy invasion; and where the Python Program would have multiple people detection in a 3-Dimentional Area with ID tag, posX, posY, posZ, velX, velY, velZ, accX, accY, accZ parameters, along with Point Clouds with elevation, azimuth, doppler, range, and snr parameters. 
+This repository contains the Batman mmWave-PCT People-Counting with Tilt Sensor SDK. The sample code below consists of instruction for using the mmWave lib. This mmWave-PCT Python Program will work with People-Counting Overhead Sensor based Batman BM501-POS mmWave Kit solution. This Python Program works with a Raspberry Pi 4, NVIDIA Jetson Nano, Windows, Linux, or MAC computer with Batman BM501-PCT Kit attached via Kit’s HAT Board; and that the BM501 Kit is an easy-to-use mmWave sensor evaluation kit for People Sensing, People Counting, or People Occupancy Density Estimation in approx. 4.5m x 4.5m x 3m region without privacy invasion; and where the Python Program would have multiple people detection in a 3-Dimentional Area with ID tag, posX, posY, posZ, velX, velY, velZ, accX, accY, accZ parameters, along with Point Clouds with elevation, azimuth, doppler, range, and snr parameters. 
 
 # BM501-PCT EVM Kit Mounting and Scene Conditions
 The BM501 Module from the EVM Kit needs to be mounted at a heigh of 2.8-3.0m top-down in the center of the area of interest, with the BM501 Module sensor directly facing the ground. Notes: If you use Tripod to elevate the EVM, Please make sure that it has an extension arm (minimun 305mm ~ 381mm or 12-15 inches) to set apart the EVM away from the Tripod's stem.
@@ -24,7 +24,7 @@ The BM501 Module from the EVM Kit needs to be mounted at a heigh of 2.8-3.0m top
  ![BM501 EVM Kit Structure](https://user-images.githubusercontent.com/2010446/118910376-ed084400-b956-11eb-8d10-defee8be9c49.png)
 
  
-    Measure Range: 6x6x3 meters
+    Measure Range: 4.5m x 4.5m x 3.0m 
     Power supply: 5Vdc/3.0A 
     
 # Installing
