@@ -291,14 +291,12 @@ List types:
 
         ####################################################################
 
-
-
-https://user-images.githubusercontent.com/2010446/218147568-6e8c1a1f-71ae-4583-bd7a-6c59da9cf0e0.mov
-
-
-
+## ex3 playback demo
 https://user-images.githubusercontent.com/2010446/217719084-ee076820-0923-4d88-8284-b1d3906d6070.MOV
 
+
+## ex4 demo
+https://user-images.githubusercontent.com/2010446/218147568-6e8c1a1f-71ae-4583-bd7a-6c59da9cf0e0.mov
 
 
 
