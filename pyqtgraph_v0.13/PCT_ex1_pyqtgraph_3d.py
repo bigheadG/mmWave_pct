@@ -54,70 +54,6 @@ colorSet = [[1.0,1.0, 0,1.0], [0, 1.0, 0, 1.0], [0, 0.4, 1.0, 1.0], [0.97, 0.35,
 			[0.5, 1.0, 0.83, 1.0], [0.99, 0.64, 0.35, 1.0],[0.35, 0.9, 0.75, 1.0],[1.0, 0.5, 0, 1.0],[1.0, 0.84, 0, 1.0],[0, 0, 1.0, 1.0]]
 			
 
-
-class CustomTextItem(gl.GLGraphicsItem.GLGraphicsItem):
-	def __init__(self, X, Y, Z, text):
-		gl.GLGraphicsItem.GLGraphicsItem.__init__(self)
-		self.text = text
-		self.X = X
-		self.Y = Y
-		self.Z = Z
-		color=(0.0,1.0,0.0,.6)
-
-	def setGLViewWidget(self, GLViewWidget):
-		self.GLViewWidget = GLViewWidget
-
-	def setText(self, text):
-		self.text = text
-		self.update()
-
-	def setX(self, X):
-		self.X = X
-		self.update()
-
-	def setY(self, Y):
-		self.Y = Y
-		self.update()
-
-	def setZ(self, Z):
-		self.Z = Z
-		self.update()
-
-	def paint(self):
-		x = 0
-		#self.GLViewWidget.qglColor(QtCore.Qt.cyan)   
-		#self.GLViewWidget.qglColor(self.color)   
-		#self.GLViewWidget.renderText(round(self.X), round(self.Y), round(self.Z), self.text)
-
-class Custom3DAxis(gl.GLAxisItem):
-	#Class defined to extend 'gl.GLAxisItem'
-	def __init__(self, parent, color=(0.0,0.0,0.0,.6)):
-		gl.GLAxisItem.__init__(self)
-		self.parent = parent
-		self.c = color
-		
-	def add_tick_values(self, xticks=[], yticks=[], zticks=[]):
-		#Adds ticks values. 
-		x,y,z = self.size()
-		xtpos = np.linspace(0, x, len(xticks))
-		ytpos = np.linspace(0, y, len(yticks))
-		ztpos = np.linspace(0, z, len(zticks))
-		#X label
-		for i, xt in enumerate(xticks):
-			val = CustomTextItem((xtpos[i]), Y= 0, Z= 0, text='{}'.format(xt))
-			val.setGLViewWidget(self.parent)
-			self.parent.addItem(val)
-		#Y label
-		for i, yt in enumerate(yticks):
-			val = CustomTextItem(X=0, Y=round(ytpos[i]), Z= 0, text='{}'.format(yt))
-			val.setGLViewWidget(self.parent)
-			self.parent.addItem(val)
-		#Z label
-		for i, zt in enumerate(zticks):
-			val = CustomTextItem(X=0, Y=0, Z=round(ztpos[i]), text='{}'.format(zt))
-			val.setGLViewWidget(self.parent)
-			self.parent.addItem(val)
-			
 def coordText(gl,gview,x=None,y=None,z=None):
 	axisitem = gl.GLAxisItem()
 	axisitem.setSize(x=x,y=y,z=z)
@@ -148,12 +84,6 @@ g = gl.GLGridItem()
 g.setSize(x=50,y=50,z=50)
 #g.setSpacing(x=1, y=1, z=1, spacing=None)
 
-'''
-axis = Custom3DAxis(win3D, color=(0.2,0.2,0.2,1.0))
-axis.setSize(x=10, y=10, z=10)
-xt = [0,1,2,3,4,5,6,7,8,9]  
-axis.add_tick_values(xticks=xt, yticks=xt, zticks=xt)
-'''
 # create box to represent device  
 verX = 0.0625
 verY = 0.05
