@@ -1,7 +1,7 @@
 ###################################################################################
 # Parameters:
-JB_UART_PORT = '/dev/tty.SLAB_USBtoUART5'
-JB_TILT_DEGREE = 45 # using: radar = pc3OVH.Pc3OVH(port, degree= JB_TILT_DEGREE)
+JB_UART_PORT = '/dev/tty.SLAB_USBtoUART6'
+JB_TILT_DEGREE = 45  
 JB_RADAR_INSTALL_HEIGHT = 2.41 # meter
 # for verifying (y1, z1) => (y, z); expected (1, 0) => (0.50, 0.86)
 ###################################################################################
@@ -28,7 +28,7 @@ JB_RADAR_INSTALL_HEIGHT = 2.41 # meter
 
 import pyqtgraph as pg
 import pyqtgraph.opengl as gl
-from pyqtgraph.Qt import mkQApp ,QtCore 
+from pyqtgraph.Qt import mkQApp ,QtCore , QtGui
 
 '''
 # before pyqtgraph Version: 0.13.1
@@ -117,7 +117,24 @@ class Custom3DAxis(gl.GLAxisItem):
 			val = CustomTextItem(X=0, Y=0, Z=round(ztpos[i]), text='{}'.format(zt))
 			val.setGLViewWidget(self.parent)
 			self.parent.addItem(val)
-
+			
+def coordText(gl,gview,x=None,y=None,z=None):
+	axisitem = gl.GLAxisItem()
+	axisitem.setSize(x=x,y=y,z=z)
+	gview.addItem(axisitem)
+	xo = np.linspace(1, x, x)
+	yo = np.linspace(1, y, y)
+	zo = np.linspace(1, z, z)
+	for i in xo:
+		axisX = gl.GLTextItem(pos=(i, 0.0, 0.0), text=f'{int(i)}',color=(127, 255, 127, 255),font=QtGui.QFont('Helvetica', 10))
+		gview.addItem(axisX)
+	for i in yo:
+		axisY = gl.GLTextItem(pos=(0.0, 0.0, i), text=f'{int(i)}',color=(127, 255, 127, 255),font=QtGui.QFont('Helvetica', 10))
+		gview.addItem(axisY)
+	for i in zo:
+		axisZ = gl.GLTextItem(pos=(0.0, i, 0.0), text=f'{int(i)}',color=(127, 255, 127, 255),font=QtGui.QFont('Helvetica', 10))
+		gview.addItem(axisZ)
+		
 ############################################
 
 #app = QtGui.QApplication([]) 
@@ -131,11 +148,12 @@ g = gl.GLGridItem()
 g.setSize(x=50,y=50,z=50)
 #g.setSpacing(x=1, y=1, z=1, spacing=None)
 
+'''
 axis = Custom3DAxis(win3D, color=(0.2,0.2,0.2,1.0))
 axis.setSize(x=10, y=10, z=10)
 xt = [0,1,2,3,4,5,6,7,8,9]  
 axis.add_tick_values(xticks=xt, yticks=xt, zticks=xt)
-
+'''
 # create box to represent device  
 verX = 0.0625
 verY = 0.05
@@ -157,12 +175,14 @@ sp0 = gl.GLScatterPlotItem(pos=pos,color=color,size = 8.0)
 #sp2 = gl.GLScatterPlotItem(pos=pos,color=color,size = 20.0)
 
 win3D.addItem(g)
-win3D.addItem(axis)
+#win3D.addItem(axis)
 win3D.addItem(evmBox)
 win3D.addItem(sp0)
 #win3D.addItem(sp2)
 
 win3D.show()
+
+coordText(gl,win3D,x=6,y=4,z=6)
 
 
 ###################################################################
