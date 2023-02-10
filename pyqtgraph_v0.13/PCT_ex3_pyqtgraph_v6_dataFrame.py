@@ -17,7 +17,7 @@
 
 import pyqtgraph as pg
 import pyqtgraph.opengl as gl
-from pyqtgraph.Qt import mkQApp ,QtCore 
+from pyqtgraph.Qt import mkQApp ,QtCore ,QtGui
 
 '''
 # before pyqtgraph Version: 0.13.1
@@ -44,7 +44,7 @@ RUN_TIME = True   #run time
 
 ###################################################################################
 # Parameters:
-PORT = '/dev/tty.SLAB_USBtoUART5'
+PORT = '/dev/tty.SLAB_USBtoUART6'
 #PORT = '/dev/tty.usbmodem14303'
 
 JB_TILT_DEGREE = 45 
@@ -57,37 +57,7 @@ PLAYBACK_FILE  = "pct_2023-02-08-16-48-32.csv" # find file in same directory
 
 ####################################################################
 
-class CustomTextItem(gl.GLGraphicsItem.GLGraphicsItem):
-	def __init__(self, X, Y, Z, text):
-		gl.GLGraphicsItem.GLGraphicsItem.__init__(self)
-		self.text = text
-		self.X = X
-		self.Y = Y
-		self.Z = Z
 
-	def setGLViewWidget(self, GLViewWidget):
-		self.GLViewWidget = GLViewWidget
-
-	def setText(self, text):
-		self.text = text
-		self.update()
-
-	def setX(self, X):
-		self.X = X
-		self.update()
-
-	def setY(self, Y):
-		self.Y = Y
-		self.update()
-
-	def setZ(self, Z):
-		self.Z = Z
-		self.update()
-
-	def paint(self):
-		a = 0
-		#self.GLViewWidget.qglColor(QtCore.Qt.cyan)
-		#self.GLViewWidget.renderText(round(self.X), round(self.Y), round(self.Z), self.text)
 
 tt = datetime.now()
 dt = tt.strftime("%Y-%m-%d-%H-%M-%S")  # 格式化日期
@@ -101,37 +71,23 @@ colorSet = [[1.0,1.0, 0,1.0], [0, 1.0, 0, 1.0], [0, 0.4, 1.0, 1.0], [0.97, 0.35,
 			[0.99, 0.35, 0.88, 1.0],[0.99, 0.9, 0.8, 1.0],[0.2, 1.0, 1.0, 1.0],[0.9, 0.8, 1.0, 1.0], [0.35, 0.99, 0.4, 1.0], 
 			[0.5, 1.0, 0.83, 1.0], [0.99, 0.64, 0.35, 1.0],[0.35, 0.9, 0.75, 1.0],[1.0, 0.5, 0, 1.0],[1.0, 0.84, 0, 1.0],[0, 0, 1.0, 1.0]]
 
-
-class Custom3DAxis(gl.GLAxisItem):
-	#Class defined to extend 'gl.GLAxisItem'
-	def __init__(self, parent, color=(0.0,0.0,0.0,.6)):
-		gl.GLAxisItem.__init__(self)
-		self.parent = parent
-		self.c = color
-		
-	def add_tick_values(self, xticks=[], yticks=[], zticks=[]):
-		#Adds ticks values. 
-		x,y,z = self.size()
-		xtpos = np.linspace(0, x, len(xticks))
-		ytpos = np.linspace(0, y, len(yticks))
-		ztpos = np.linspace(0, z, len(zticks))
-		#X label
-		for i, xt in enumerate(xticks):
-			val = CustomTextItem((xtpos[i]), Y= 0, Z= 0, text='{}'.format(xt))
-			val.setGLViewWidget(self.parent)
-			self.parent.addItem(val)
-		#Y label
-		for i, yt in enumerate(yticks):
-			val = CustomTextItem(X=0, Y=round(ytpos[i]), Z= 0, text='{}'.format(yt))
-			val.setGLViewWidget(self.parent)
-			self.parent.addItem(val)
-		#Z label
-		for i, zt in enumerate(zticks):
-			val = CustomTextItem(X=0, Y=0, Z=round(ztpos[i]), text='{}'.format(zt))
-			val.setGLViewWidget(self.parent)
-			self.parent.addItem(val)
-
-
+def coordText(gl,gview,x=None,y=None,z=None):
+	axisitem = gl.GLAxisItem()
+	axisitem.setSize(x=x,y=y,z=z)
+	gview.addItem(axisitem)
+	xo = np.linspace(1, x, x)
+	yo = np.linspace(1, y, y)
+	zo = np.linspace(1, z, z)
+	for i in xo:
+		axisX = gl.GLTextItem(pos=(i, 0.0, 0.0), text=f'{int(i)}',color=(127, 255, 127, 255),font=QtGui.QFont('Helvetica', 10))
+		gview.addItem(axisX)
+	for i in yo:
+		axisY = gl.GLTextItem(pos=(0.0, 0.0, i), text=f'{int(i)}',color=(127, 255, 127, 255),font=QtGui.QFont('Helvetica', 10))
+		gview.addItem(axisY)
+	for i in zo:
+		axisZ = gl.GLTextItem(pos=(0.0, i, 0.0), text=f'{int(i)}',color=(127, 255, 127, 255),font=QtGui.QFont('Helvetica', 10))
+		gview.addItem(axisZ)
+ 
 
 #app = QtGui.QApplication([]) 
 app = mkQApp("PCT")
@@ -147,12 +103,11 @@ g.setSize(x=50,y=50,z=50)
 #g.setSpacing(x=1, y=1, z=1, spacing=None)
 w.addItem(g)
 
-axis = Custom3DAxis(w, color=(0.2,0.2,0.2,1.0))
-axis.setSize(x=5, y=5, z=5)
+ 
 xt = [0,1,2,3,4,5]  
-axis.add_tick_values(xticks=xt, yticks=xt, zticks=xt)
-w.addItem(axis)
-
+ 
+ 
+coordText(gl,w,x=6,y=4,z=6)
 
 ####### create box to represent device ######
 verX = 0.0625
