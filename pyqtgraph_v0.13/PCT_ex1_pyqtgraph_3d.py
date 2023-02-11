@@ -1,6 +1,6 @@
 ###################################################################################
 # Parameters:
-JB_UART_PORT = '/dev/tty.SLAB_USBtoUART6'
+JB_UART_PORT = '/dev/tty.SLAB_USBtoUART5'
 JB_TILT_DEGREE = 45  
 JB_RADAR_INSTALL_HEIGHT = 2.41 # meter
 # for verifying (y1, z1) => (y, z); expected (1, 0) => (0.50, 0.86)
@@ -54,22 +54,25 @@ colorSet = [[1.0,1.0, 0,1.0], [0, 1.0, 0, 1.0], [0, 0.4, 1.0, 1.0], [0.97, 0.35,
 			[0.5, 1.0, 0.83, 1.0], [0.99, 0.64, 0.35, 1.0],[0.35, 0.9, 0.75, 1.0],[1.0, 0.5, 0, 1.0],[1.0, 0.84, 0, 1.0],[0, 0, 1.0, 1.0]]
 			
 
-def coordText(gl,gview,x=None,y=None,z=None):
+def coordText(gl,gview,x=None,y=None,z=None,fontSize = None):
 	axisitem = gl.GLAxisItem()
 	axisitem.setSize(x=x,y=y,z=z)
 	gview.addItem(axisitem)
+	size = 10 if fontSize == None else fontSize
 	xo = np.linspace(1, x, x)
 	yo = np.linspace(1, y, y)
 	zo = np.linspace(1, z, z)
-	for i in xo:
-		axisX = gl.GLTextItem(pos=(i, 0.0, 0.0), text=f'{int(i)}',color=(127, 255, 127, 255),font=QtGui.QFont('Helvetica', 10))
+	
+	for i in range(len(xo)):
+		axisX = gl.GLTextItem(pos=(xo[i], 0.0, 0.0),  text=f'{xo[i]}' if i != len(xo)-1 else 'X' ,color=(255, 127, 127, 255),font=QtGui.QFont('Helvetica', size))
 		gview.addItem(axisX)
-	for i in yo:
-		axisY = gl.GLTextItem(pos=(0.0, 0.0, i), text=f'{int(i)}',color=(127, 255, 127, 255),font=QtGui.QFont('Helvetica', 10))
+	for i in range(len(yo)):
+		axisY = gl.GLTextItem(pos=( 0.0, yo[i], 0.0), text=f'{yo[i]}' if i != len(yo)-1 else 'Y' ,color=(127, 255, 127, 255),font=QtGui.QFont('Helvetica', size))
 		gview.addItem(axisY)
-	for i in zo:
-		axisZ = gl.GLTextItem(pos=(0.0, i, 0.0), text=f'{int(i)}',color=(127, 255, 127, 255),font=QtGui.QFont('Helvetica', 10))
+	for i in range(len(zo)):
+		axisZ = gl.GLTextItem(pos=( 0.0, 0.0, zo[i]), text=f'{zo[i]}' if i != len(zo)-1 else 'Z' ,color=(127, 127, 255, 255),font=QtGui.QFont('Helvetica', size))
 		gview.addItem(axisZ)
+
 		
 ############################################
 
@@ -114,7 +117,7 @@ win3D.addItem(sp0)
 
 win3D.show()
 
-coordText(gl,win3D,x=6,y=4,z=6)
+coordText(gl,win3D,x=6,y=6,z=4,fontSize=12)
 
 
 ###################################################################
