@@ -43,12 +43,12 @@ import pandas as pd
 ################### parameter setting   ######
 
 # Parameters:
-PORT = '/dev/tty.SLAB_USBtoUART6'
+PORT = '/dev/tty.SLAB_USBtoUART5'
 #PORT = '/dev/tty.usbmodem14303'
 
 JB_TILT_DEGREE = 45 
 JB_RADAR_INSTALL_HEIGHT = 2.41 # meter
-
+'''
 def coordText(gl,gview,x=None,y=None,z=None):
 	axisitem = gl.GLAxisItem()
 	axisitem.setSize(x=x,y=y,z=z)
@@ -65,7 +65,26 @@ def coordText(gl,gview,x=None,y=None,z=None):
 	for i in zo:
 		axisZ = gl.GLTextItem(pos=(0.0, i, 0.0), text=f'{int(i)}',color=(127, 255, 127, 255),font=QtGui.QFont('Helvetica', 10))
 		gview.addItem(axisZ)
-		
+'''
+def coordText(gl,gview,x=None,y=None,z=None,fontSize = None):
+	axisitem = gl.GLAxisItem()
+	axisitem.setSize(x=x,y=y,z=z)
+	gview.addItem(axisitem)
+	size = 10 if fontSize == None else fontSize
+	xo = np.linspace(1, x, x)
+	yo = np.linspace(1, y, y)
+	zo = np.linspace(1, z, z)
+	
+	for i in range(len(xo)):
+		axisX = gl.GLTextItem(pos=(xo[i], 0.0, 0.0),  text=f'{xo[i]}' if i != len(xo)-1 else 'X' ,color=(255, 127, 127, 255),font=QtGui.QFont('Helvetica', size))
+		gview.addItem(axisX)
+	for i in range(len(yo)):
+		axisY = gl.GLTextItem(pos=( 0.0, yo[i], 0.0), text=f'{yo[i]}' if i != len(yo)-1 else 'Y' ,color=(127, 255, 127, 255),font=QtGui.QFont('Helvetica', size))
+		gview.addItem(axisY)
+	for i in range(len(zo)):
+		axisZ = gl.GLTextItem(pos=( 0.0, 0.0, zo[i]), text=f'{zo[i]}' if i != len(zo)-1 else 'Z' ,color=(127, 127, 255, 255),font=QtGui.QFont('Helvetica', size))
+		gview.addItem(axisZ)
+
 
 ######################### Parameter Set ##################################
 TARGET_OBJ = True     # False = point cloud  True = Target
@@ -100,7 +119,7 @@ w.addItem(axis)
 '''
 w.setWindowTitle('Position Occupancy(Cluster/Point Cloud)')
 
-coordText(gl,w,x=6,y=4,z=6)
+coordText(gl,w,x=6,y=6,z=4,fontSize=12)
 
 
 
