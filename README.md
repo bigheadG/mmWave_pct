@@ -257,7 +257,7 @@ List types:
       
 # Read Record Data File for Analysis point cloud Step by Step.
     
-    this subroutine work with Point Cloud tool kit PCA-001 then you can step by step to analysis point cloud:
+    this subroutine work with Point Cloud tool kit TK-001 then you can step by step to analysis point cloud:
     
     (1)Read record file
     readFile(fileName)
