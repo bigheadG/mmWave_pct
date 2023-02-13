@@ -307,7 +307,8 @@ https://user-images.githubusercontent.com/2010446/218147568-6e8c1a1f-71ae-4583-b
 # AOP Coordinate Geometry
 
 ![aop_objGeoSmall](https://user-images.githubusercontent.com/2010446/217845801-6e05d7b9-34cc-44b4-88e9-74482df43fc8.png)
-![BM502_wall_1200x800_20230213001](https://user-images.githubusercontent.com/2010446/218392371-24aaafde-818d-4c52-867e-d3a01e1357cd.jpg)
+![BM502_wall_1200x800_20230213001](https://user-images.githubusercontent.com/2010446/218400707-f611f3db-e695-4d68-bc99-3b5425b92341.jpg)
+
 
 
 ## Reference
