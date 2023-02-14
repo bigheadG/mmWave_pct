@@ -1,6 +1,6 @@
 ###################################################################################
 # Parameters:
-JB_UART_PORT = '/dev/tty.SLAB_USBtoUART5'
+JB_UART_PORT = '/dev/tty.SLAB_USBtoUART'
 JB_TILT_DEGREE = 45  
 JB_RADAR_INSTALL_HEIGHT = 2.41 # meter
 # for verifying (y1, z1) => (y, z); expected (1, 0) => (0.50, 0.86)
@@ -30,15 +30,8 @@ import pyqtgraph as pg
 import pyqtgraph.opengl as gl
 from pyqtgraph.Qt import mkQApp ,QtCore , QtGui
 
-'''
-# before pyqtgraph Version: 0.13.1
-from pyqtgraph.Qt import QtCore, QtGui
-import pyqtgraph.opengl as gl
-import pyqtgraph as pg
-'''
 
 import numpy as np
-
 from mmWave import pct
 import serial
 from threading import Thread
@@ -47,14 +40,13 @@ from datetime import date,datetime
 
 st = datetime.now()
 sim_startFN = 0
-sim_stopFN = 0
+sim_stopFN = 0	
 
-colorSet = [[1.0,1.0, 0,1.0], [0, 1.0, 0, 1.0], [0, 0.4, 1.0, 1.0], [0.97, 0.35, 1.0, 1.0], [0.35, 0.99, 0.99, 1.0],
-			[0.99, 0.35, 0.88, 1.0],[0.99, 0.9, 0.8, 1.0],[0.2, 1.0, 1.0, 1.0],[0.9, 0.8, 1.0, 1.0], [0.35, 0.99, 0.4, 1.0], 
-			[0.5, 1.0, 0.83, 1.0], [0.99, 0.64, 0.35, 1.0],[0.35, 0.9, 0.75, 1.0],[1.0, 0.5, 0, 1.0],[1.0, 0.84, 0, 1.0],[0, 0, 1.0, 1.0]]
-			
-
-def coordText(gl,gview,x=None,y=None,z=None,fontSize = None):
+#
+#Create coordinate Axis , label , radar, grid
+#
+def coordInfo(gl,gview,x=None,y=None,z=None, install_height = None,fontSize = None,gx=None,gy=None,gz=None):
+	#(0)create axis 
 	axisitem = gl.GLAxisItem()
 	axisitem.setSize(x=x,y=y,z=z)
 	gview.addItem(axisitem)
@@ -72,7 +64,29 @@ def coordText(gl,gview,x=None,y=None,z=None,fontSize = None):
 	for i in range(len(zo)):
 		axisZ = gl.GLTextItem(pos=( 0.0, 0.0, zo[i]), text=f'{zo[i]}' if i != len(zo)-1 else 'Z' ,color=(127, 127, 255, 255),font=QtGui.QFont('Helvetica', size))
 		gview.addItem(axisZ)
-
+	
+	#(1)create box to represent device 
+	zOffSet = install_height
+	verX = 0.0625
+	verY = 0.05
+	verZ = 0.125
+	verts = np.empty((2,3,3))
+	verts[0,0,:] = [-verX, 0, verZ + zOffSet]
+	verts[0,1,:] = [-verX, 0,-verZ + zOffSet]
+	verts[0,2,:] = [verX,  0,-verZ + zOffSet]
+	verts[1,0,:] = [-verX, 0, verZ + zOffSet]
+	verts[1,1,:] = [verX,  0, verZ + zOffSet]
+	verts[1,2,:] = [verX,  0, -verZ + zOffSet]
+	
+	#(2)create evmBox 
+	evmBox = gl.GLMeshItem(vertexes=verts,smooth=False,drawEdges=True,edgeColor=pg.glColor('r'),drawFaces=False)
+	gview.addItem(evmBox)
+	
+	#(2)create gridX,Y 
+	grid = gl.GLGridItem()
+	#g.setSpacing(x=1, y=1, z=1, spacing=None)
+	grid.setSize(x=gx,y=gy,z=gz)
+	gview.addItem(grid)
 		
 ############################################
 
@@ -82,43 +96,20 @@ app = mkQApp("PCT")
 #################for v6 3D plot ###########################
 win3D = gl.GLViewWidget()
 win3D.setWindowTitle('(w) V6:sp0 3D Chart')
-#size=50:50:50
 
-g = gl.GLGridItem()
-g.setSize(x=50,y=50,z=50)
 
-#g.setSpacing(x=1, y=1, z=1, spacing=None)
-
-# create box to represent device  
-verX = 0.0625
-verY = 0.05
-verZ = 0.125
-zOffSet =  JB_RADAR_INSTALL_HEIGHT
-verts = np.empty((2,3,3))
-verts[0,0,:] = [-verX, 0, verZ + zOffSet]
-verts[0,1,:] = [-verX, 0,-verZ + zOffSet]
-verts[0,2,:] = [verX,  0,-verZ + zOffSet]
-verts[1,0,:] = [-verX, 0, verZ + zOffSet]
-verts[1,1,:] = [verX,  0, verZ + zOffSet]
-verts[1,2,:] = [verX,  0, -verZ + zOffSet]
- 
-evmBox = gl.GLMeshItem(vertexes=verts,smooth=False,drawEdges=True,edgeColor=pg.glColor('r'),drawFaces=False)
 # set Scatter plot
 pos = np.zeros((100,3))
 color = [1.0, 0.0, 0.0, 1.0]
 sp0 = gl.GLScatterPlotItem(pos=pos,color=color,size = 8.0)
 #sp2 = gl.GLScatterPlotItem(pos=pos,color=color,size = 20.0)
 
-win3D.addItem(g)
-#win3D.addItem(axis)
-win3D.addItem(evmBox)
 win3D.addItem(sp0)
 #win3D.addItem(sp2)
 
 win3D.show()
 
-coordText(gl,win3D,x=6,y=6,z=4,fontSize=12)
-
+coordInfo(gl,win3D,x=6,y=6,z=4,install_height= JB_RADAR_INSTALL_HEIGHT,fontSize=12,gx = 50,gy=50,gz= 50)
 
 ###################################################################
 #
@@ -194,7 +185,7 @@ sensorA = []
 
 
 def update():
-	global color,gcolor,sensorA,sp0,sp1
+	global color,sensorA,sp0,sp1
 	global pctA,v6pcA,bar
 	
 	#v6 hit counts
@@ -237,7 +228,7 @@ def showData(dck,v6i,v7i,v8i):
 		if v7len > 0:
 			print("\n--------v7-----------fn:{:} len({:})".format(fn,v7len))
 			print(v7i)
-		if v8len > 2:
+		if v8len > 0:
 			print("\n--------v8-----------fn:{:} len({:})".format(fn,v8len))
 			print(v8i)
 		
@@ -283,13 +274,14 @@ def radarExec():
 		
 		sensorA = np.array(dBuf,dtype=object)
 		
-	port.flushInput() 
+	
 
 		 
 def uartThread(name):
 	port.flushInput()
 	while True:
 		radarExec()
+		port.flushInput() 
 					
 thread1 = Thread(target = uartThread, args =("UART",))
 thread1.setDaemon(True)
@@ -299,11 +291,3 @@ thread1.start()
 if __name__ == '__main__':
     pg.exec()
     
-## Start Qt event loop unless running in interactive mode.
-'''
-#before pyqtgraph Version: 0.13.1
-if __name__ == '__main__':
-    import sys
-    if (sys.flags.interactive != 1) or not hasattr(QtCore,'PYQT_VERSION'):
-        QtGui.QApplication.instance().exec_()
-'''
