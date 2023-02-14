@@ -375,7 +375,7 @@ def radarExec():
 				#(1.1) Extract x,y,z,doppler,noise from V6
 					 
 				#(1.2)DBSCAN
-				db = DBSCAN(eps=0.5, min_samples=SAMPLE_POINT).fit(d_std)
+				db = DBSCAN(eps=0.5, min_samples=int(SAMPLE_POINT)).fit(d_std)
 				#labels: -1: non-cluster point 
 				labels = db.labels_
 				
