@@ -7,7 +7,7 @@
 #
 # lib: pct
 #
-# graphics tools: pyqtgraph Version: 0.13.1
+# plot tools: pyqtgraph
 # Plot point cloud(V6) in 3D figure 
 # wall mount people counting with tilt (PCT)
 # type: Raw data
@@ -15,22 +15,18 @@
 #			 real time: 921600
 #=============================================
 
-import pyqtgraph as pg
-import pyqtgraph.opengl as gl
-from pyqtgraph.Qt import mkQApp ,QtCore ,QtGui
+#from pyqtgraph.Qt import QtCore, QtGui
+from PyQt5 import QtGui, QtWidgets, QtCore  # for linux
+from PyQt5.QtGui import QPen, QColor
 
-'''
-# before pyqtgraph Version: 0.13.1
-from pyqtgraph.Qt import QtCore, QtGui
 import pyqtgraph.opengl as gl
 import pyqtgraph as pg
-'''
-
 import numpy as np
 
 from mmWave import pct
 import serial
 from threading import Thread
+
 
 from datetime import date,datetime,time
 from sklearn.cluster import DBSCAN
@@ -44,7 +40,7 @@ RUN_TIME = True   #run time
 
 ###################################################################################
 # Parameters:
-PORT = '/dev/tty.SLAB_USBtoUART5'
+PORT = 'COM36'
 #PORT = '/dev/tty.usbmodem14303'
 
 JB_TILT_DEGREE = 45 
@@ -57,7 +53,37 @@ PLAYBACK_FILE  = "pct_2023-02-08-16-48-32.csv" # find file in same directory
 
 ####################################################################
 
+class CustomTextItem(gl.GLGraphicsItem.GLGraphicsItem):
+	def __init__(self, X, Y, Z, text):
+		gl.GLGraphicsItem.GLGraphicsItem.__init__(self)
+		self.text = text
+		self.X = X
+		self.Y = Y
+		self.Z = Z
 
+	def setGLViewWidget(self, GLViewWidget):
+		self.GLViewWidget = GLViewWidget
+
+	def setText(self, text):
+		self.text = text
+		self.update()
+
+	def setX(self, X):
+		self.X = X
+		self.update()
+
+	def setY(self, Y):
+		self.Y = Y
+		self.update()
+
+	def setZ(self, Z):
+		self.Z = Z
+		self.update()
+
+	def paint(self):
+		a = 0
+		#self.GLViewWidget.qglColor(QtCore.Qt.cyan)
+		#self.GLViewWidget.renderText(round(self.X), round(self.Y), round(self.Z), self.text)
 
 tt = datetime.now()
 dt = tt.strftime("%Y-%m-%d-%H-%M-%S")  # 格式化日期
@@ -71,29 +97,40 @@ colorSet = [[1.0,1.0, 0,1.0], [0, 1.0, 0, 1.0], [0, 0.4, 1.0, 1.0], [0.97, 0.35,
 			[0.99, 0.35, 0.88, 1.0],[0.99, 0.9, 0.8, 1.0],[0.2, 1.0, 1.0, 1.0],[0.9, 0.8, 1.0, 1.0], [0.35, 0.99, 0.4, 1.0], 
 			[0.5, 1.0, 0.83, 1.0], [0.99, 0.64, 0.35, 1.0],[0.35, 0.9, 0.75, 1.0],[1.0, 0.5, 0, 1.0],[1.0, 0.84, 0, 1.0],[0, 0, 1.0, 1.0]]
 
-def coordText(gl,gview,x=None,y=None,z=None,fontSize = None):
-	axisitem = gl.GLAxisItem()
-	axisitem.setSize(x=x,y=y,z=z)
-	gview.addItem(axisitem)
-	size = 10 if fontSize == None else fontSize
-	xo = np.linspace(1, x, x)
-	yo = np.linspace(1, y, y)
-	zo = np.linspace(1, z, z)
-	
-	for i in range(len(xo)):
-		axisX = gl.GLTextItem(pos=(xo[i], 0.0, 0.0),  text=f'{xo[i]}' if i != len(xo)-1 else 'X' ,color=(255, 127, 127, 255),font=QtGui.QFont('Helvetica', size))
-		gview.addItem(axisX)
-	for i in range(len(yo)):
-		axisY = gl.GLTextItem(pos=( 0.0, yo[i], 0.0), text=f'{yo[i]}' if i != len(yo)-1 else 'Y' ,color=(127, 255, 127, 255),font=QtGui.QFont('Helvetica', size))
-		gview.addItem(axisY)
-	for i in range(len(zo)):
-		axisZ = gl.GLTextItem(pos=( 0.0, 0.0, zo[i]), text=f'{zo[i]}' if i != len(zo)-1 else 'Z' ,color=(127, 127, 255, 255),font=QtGui.QFont('Helvetica', size))
-		gview.addItem(axisZ)
+
+class Custom3DAxis(gl.GLAxisItem):
+	#Class defined to extend 'gl.GLAxisItem'
+	def __init__(self, parent, color=(0.0,0.0,0.0,.6)):
+		gl.GLAxisItem.__init__(self)
+		self.parent = parent
+		self.c = color
+		
+	def add_tick_values(self, xticks=[], yticks=[], zticks=[]):
+		#Adds ticks values. 
+		x,y,z = self.size()
+		xtpos = np.linspace(0, x, len(xticks))
+		ytpos = np.linspace(0, y, len(yticks))
+		ztpos = np.linspace(0, z, len(zticks))
+		#X label
+		for i, xt in enumerate(xticks):
+			val = CustomTextItem((xtpos[i]), Y= 0, Z= 0, text='{}'.format(xt))
+			val.setGLViewWidget(self.parent)
+			self.parent.addItem(val)
+		#Y label
+		for i, yt in enumerate(yticks):
+			val = CustomTextItem(X=0, Y=round(ytpos[i]), Z= 0, text='{}'.format(yt))
+			val.setGLViewWidget(self.parent)
+			self.parent.addItem(val)
+		#Z label
+		for i, zt in enumerate(zticks):
+			val = CustomTextItem(X=0, Y=0, Z=round(ztpos[i]), text='{}'.format(zt))
+			val.setGLViewWidget(self.parent)
+			self.parent.addItem(val)
 
 
-#app = QtGui.QApplication([]) 
-app = mkQApp("PCT")
 
+#app = QtGui.QApplication([])
+app = QtWidgets.QApplication([])     # for linux
 
 w = gl.GLViewWidget()
 w.setWindowTitle('PCT (point clouds) demo')
@@ -105,11 +142,12 @@ g.setSize(x=50,y=50,z=50)
 #g.setSpacing(x=1, y=1, z=1, spacing=None)
 w.addItem(g)
 
- 
+axis = Custom3DAxis(w, color=(0.2,0.2,0.2,1.0))
+axis.setSize(x=5, y=5, z=5)
 xt = [0,1,2,3,4,5]  
- 
- 
-coordText(gl,w,x=6,y=6,z=4,fontSize= 12)
+axis.add_tick_values(xticks=xt, yticks=xt, zticks=xt)
+w.addItem(axis)
+
 
 ####### create box to represent device ######
 verX = 0.0625
@@ -200,7 +238,7 @@ def showData(dck,v6i,v7i,v8i):
 			print("\n--------v6-----------fn:{:} len({:})".format(fn,v6len))
 			v6i = v6i[:10]
 			print(v6i)
-			print(v6i.mean())
+			#print(v6i.mean())
 			
 			
 		if 1:
@@ -262,7 +300,7 @@ def radarExec():
 			dd = v6op.loc[:,['sx','sy','sz','doppler']] 
 			
 			#(1.1) insert v6 to data Queue(objBuf) 
-			objBuf = objBuf.append(v6op.loc[:,['fN','sx','sy','sz']], ignore_index=False)
+			objBuf = objBuf._append(v6op.loc[:,['fN','sx','sy','sz']], ignore_index=False)
 			locBuf.insert(0,fn)
 			if len(locBuf) > QUEUE_LEN:
 				objBuf = objBuf.loc[objBuf.fN != locBuf.pop()]
@@ -344,15 +382,9 @@ thread1 = Thread(target = uartThread, args =("UART",))
 thread1.setDaemon(True)
 thread1.start()
 
-
-if __name__ == '__main__':
-    pg.exec()
-
 ## Start Qt event loop unless running in interactive mode.
-
-'''
 if __name__ == '__main__':
     import sys
     if (sys.flags.interactive != 1) or not hasattr(QtCore,'PYQT_VERSION'):
-        QtGui.QApplication.instance().exec_()
-'''
+        #QtGui.QApplication.instance().exec_()
+        QtWidgets.QApplication.instance().exec_()  # for linux
