@@ -18,17 +18,17 @@ Note: For People Fall Detection please refer to “PCT_FDS: People Fall Detectio
 
 
 # BM502-PCT EVM Kit Mounting and Scene Conditions
-The BM501 Module from the EVM Kit needs to be mounted at a heigh of 2.8-3.0m top-down in the center of the area of interest, with the BM501 Module sensor directly facing the ground. Notes: If you use Tripod to elevate the EVM, Please make sure that it has an extension arm (minimun 305mm ~ 381mm or 12-15 inches) to set apart the EVM away from the Tripod's stem.
+The BM502 Module from the EVM Kit needs to be mounted at a heigh of 2.8-3.0m top-down in the center of the area of interest, with the BM501 Module sensor directly facing the ground. Notes: If you use Tripod to elevate the EVM, Please make sure that it has an extension arm (minimun 305mm ~ 381mm or 12-15 inches) to set apart the EVM away from the Tripod's stem.
     
 
 # Hardware:
-    Batman BM501-PCT EVM Kit (TI IWR6843AOP ASIC based mmWave solution)
+    Batman BM502-PCT EVM Kit (TI IWR6843AOP ASIC based mmWave solution)
  
  ![BM501 EVM Kit Structure](https://user-images.githubusercontent.com/2010446/118910376-ed084400-b956-11eb-8d10-defee8be9c49.png)
 
  
     Measure Range: 4.5m x 4.5m x 3.0m 
-    Power supply: 5Vdc/3.0A 
+    Power supply: 5Vdc/2.1A 
     
 # Installing
 
