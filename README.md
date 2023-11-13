@@ -27,6 +27,8 @@ The BM502 Module from the EVM Kit needs to be mounted at a heigh of 2.8-3.0m top
  
  ![BM502 EVM Kit Structure](https://github.com/bigheadG/mmWave_pct/assets/2010446/165c397a-2676-49ca-b32b-4876f657dd28)
 
+ Note : Specifications subject to change without prior notice
+
 
  
     Measure Range: 4.5m x 4.5m x 3.0m 
